@@ -1,4 +1,10 @@
-# node-js-getting-started
+# reddit-to-linq-text
+
+Forked from heroku/node-js-getting-started.
+
+Just a quick and dirty solution to extract text from Reddit thread to LingQ importable format.
+
+## node-js-getting-started
 
 A barebones Node.js app using [Express 4](http://expressjs.com/).
 
