@@ -3,20 +3,30 @@
 <head>
   <% include ../partials/header.ejs %>
   <style>
-    input {
-      width: 100vw;
-      height: 1.5rem;
-      margin: 1rem 0;
+    form, input {
+      margin: 2rem 0;
+    }
+    button {
+      width: 100%;
     }
   </style>
 </head>
-<body>
-  <form target="_self" action="/lingq" method="GET">
-    <label>
+<body class="container">
+  <form target="_self" action="/lingq" method="GET" class="row">
+    <label class="col-xs-12">
         Input Reddit or Flashback URL:
-      <input name="link" type="text" >
+      <input name="link" type="text" class="form-control">
     </label>
-    <button type="submit" class="btn btn-primary">Jump to LingQ readable import</button>
+    <div class="col-xs-12">
+      <button type="submit" class="btn btn-primary">Jump to LingQ readable import</button>
+    </div>
   </form>
+
+  <script>
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function() { console.log("Service worker registered"); });
+    }
+  </script>
 </body>
 </html>

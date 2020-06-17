@@ -29,6 +29,47 @@ express()
         return
     }
   })
+  .get('/manifest.json', (req, res) => res.json(
+    {
+      "name": "To LingQ Importable",
+      "short_name": "LQImport",
+      "start_url": "/",
+      "display": "minimal-ui",
+      "share_target": {
+        "action": "/lingq",
+        "method": "GET",
+        "params": {
+          "title": "share_title",
+          "text": "link",
+          "url": "share_url"
+        }
+      },
+      "icons": [{
+        "src": "https://placehold.co/512x512/000000/FFFFFF/png?text=QIm",
+        "type": "image/png",
+        "sizes": "512x512",
+        "purpose": "any",
+      }],
+      "theme_color": "#111111",
+      "background_color": "#000000"
+    }
+  ))
+  .get('/sw.js', (req, res) => {
+    res.set({ 'Content-Type': 'application/javascript; charset=utf-8' });
+    res.end(
+`
+self.addEventListener('fetch', event => {
+  event.respondWith((async () => {
+    try {
+      return await fetch(event.request);
+    } catch (e) {
+      return new Response('Get online, please! You are offline now', {status: 200});
+    }
+  })());
+});
+`
+    );
+  })
   .get('/', (req, res) => res.render('pages/index'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
