@@ -136,12 +136,11 @@ async function fromFlashback(flashbackURL) {
     iconv.decode(await (await fetch(req)).buffer(), 'ISO-8859-1')
   )
 
-  const title = `${$('title').text()}`
-
+  
   const result$ = cheerio.load(`
   <html>
   <head>
-      <title></title>
+  <title></title>
   </head>
   <body>
   
@@ -150,15 +149,43 @@ async function fromFlashback(flashbackURL) {
   `
   )
   const body$ = result$('body')
+  
+  const title = `${$('title').text()}`
+  const titleP = $('<p></p>')
+  titleP.text(title)
+  body$.append(titleP)
 
-  $('.post-col.post-right').toArray().map(e => $(e).text()).map(text => {
-    const p = $('<p></p>')
-    p.text(text)
-    return p
-  }).forEach(p => {
-    body$.append(p)
-    body$.append($('<p></p><p>===</p><p></p>'))
-  })
+  $('.post_message')
+    .toArray()
+    .map(messageNode => {
+      const quoteText = $(messageNode).find('.post-bbcode-quote-wrapper').text()
+      $(messageNode).find('.post-bbcode-quote-wrapper').remove()
+
+      const result = [];
+      if (quoteText) {
+        const quoteP = $('<p></p>')
+        quoteP.text(quoteText)
+
+        result.push($('<p>&gt;&gt;&gt;&gt;&gt;&gt;</p>'))
+        result.push(quoteP)
+        result.push($('<p>&lt;&lt;&lt;&lt;&lt;&lt;</p>'))
+        result.push($('<p></p>'))
+      }
+
+      const messageP = $('<p></p>')
+      messageP.text($(messageNode).text())
+      result.push(messageP)
+
+      result.push($('<p></p>'))
+      result.push($('<p>===</p>'))
+      result.push($('<p></p>'))
+
+      return result
+    })
+    .flat()
+    .forEach(n => {
+      body$.append(n)
+    })
   
   result$('title').text(title)
 
